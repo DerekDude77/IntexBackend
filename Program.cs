@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore; // Replace 'YourNamespace' with the namespace of your MyDatabaseContext class
 using IntexDatabaseConnection.Models;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
+using Microsoft.Extensions.Options;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,8 +13,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//builder.Services.AddDbContext<MyDatabaseContext>(options =>
+//    options.UseNpgsql(builder.Configuration.GetConnectionString("MyDatabase")));
+
+var authConnectString = builder.Configuration["ConnectionStrings:MyDatabase"];
 builder.Services.AddDbContext<MyDatabaseContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("MyDatabase")));
+    options.UseNpgsql(authConnectString));
+//builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 var app = builder.Build();
 
